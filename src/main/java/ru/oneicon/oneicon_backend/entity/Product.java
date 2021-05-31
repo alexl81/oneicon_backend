@@ -35,10 +35,10 @@ public class Product implements Serializable {
     @Column(name = "image", nullable = false, columnDefinition = "VARCHAR(100)")
     private String image;
 
-    @Column(name = "image2", nullable = false, columnDefinition = "VARCHAR(100)")
+    @Column(name = "image_2", nullable = false, columnDefinition = "VARCHAR(100)")
     private String image2;
 
-    @Column(name = "image3", nullable = false, columnDefinition = "VARCHAR(100)")
+    @Column(name = "image_3", nullable = false, columnDefinition = "VARCHAR(100)")
     private String image3;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "product")
