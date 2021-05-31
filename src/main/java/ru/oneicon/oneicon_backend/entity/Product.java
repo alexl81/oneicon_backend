@@ -42,5 +42,8 @@ public class Product implements Serializable {
     private String image3;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "product")
-    private List<ProductCategory> productCategory = new ArrayList<>();
+    private List<ProductCategory> productCategoryList = new ArrayList<>();
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "product")
+    private List<ProductAttribute> productAttributeList = new ArrayList<>();
 }
