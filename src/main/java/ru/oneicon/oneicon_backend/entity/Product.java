@@ -46,4 +46,7 @@ public class Product implements Serializable {
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "product")
     private List<ProductAttribute> productAttributeList = new ArrayList<>();
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "product")
+    private List<OrderDetails> orderDetailsList = new ArrayList<>();
 }

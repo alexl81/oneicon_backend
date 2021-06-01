@@ -4,7 +4,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -37,5 +39,8 @@ public class Orders implements Serializable {
     @ManyToOne
     @JoinColumn( name = "customer_id", nullable = false, referencedColumnName = "id", foreignKey = @ForeignKey(name = "customer_orders_fk"))
     private Customer customer;
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "orders")
+    private List<OrderDetails> orderDetailsList = new ArrayList<>();
 
 }
