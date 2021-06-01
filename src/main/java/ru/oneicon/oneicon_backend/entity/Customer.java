@@ -67,4 +67,6 @@ public class Customer implements Serializable {
     )
     private List<Orders> orders = new ArrayList<>();
 
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, mappedBy = "customer")
+    private List<Review> reviews = new ArrayList<>();
 }
