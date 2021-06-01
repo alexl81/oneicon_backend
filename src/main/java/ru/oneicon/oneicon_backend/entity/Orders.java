@@ -43,4 +43,9 @@ public class Orders implements Serializable {
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "orders")
     private List<OrderDetails> orderDetailsList = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn( name = "shipping_id", nullable = false, referencedColumnName = "id", foreignKey = @ForeignKey(name = "shipping_orders_fk"))
+    private Shipping shipping;
+
+
 }
