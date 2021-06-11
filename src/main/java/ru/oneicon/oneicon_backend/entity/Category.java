@@ -20,7 +20,7 @@ public class Category implements Serializable {
     @Id
     @SequenceGenerator(name = "category_sequence", sequenceName = "category_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_sequence")
-    @Column(name = "id", updatable = false)
+    @Column(name = "id",updatable = false)
     private Long id;
 
     @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(100)")

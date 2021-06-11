@@ -19,6 +19,9 @@ import java.util.List;
 public class Orders implements Serializable {
 
     @Id
+    @SequenceGenerator(name = "orders_sequence", sequenceName = "orders_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "orders_sequence")
+    @Column(name = "id",updatable = false)
     private Long id;
 
     @Column(name = "total_amount", nullable = false, columnDefinition = "DECIMAL(10)")

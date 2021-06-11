@@ -52,4 +52,5 @@ public class Product implements Serializable {
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, mappedBy = "product")
     private List<Review> reviews = new ArrayList<>();
+
 }
