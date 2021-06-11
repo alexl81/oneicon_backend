@@ -1,4 +1,3 @@
-
 -- Populate category table -OK
 INSERT INTO category ("name", "description") VALUES
 ('French', 'The French have always had an eye for beauty. One look at the T-shirts below and you''ll see that same appreciation has been applied abundantly to their postage stamps. Below are some of our most beautiful and colorful T-shirts, so browse away! And don''t forget to go all the way to the bottom - you don''t want to miss any of them!'),
@@ -170,7 +169,7 @@ INSERT INTO shipping_region ("shipping_regions") VALUES
 
 -- Populate shipping table - OK
 INSERT INTO shipping ("shipping_type",
-                        "shipping_cost", "shipping_region_id") VALUES
+                      "shipping_cost", "shipping_region_id") VALUES
 ('Next Day Delivery ($20)', 2000, 2),
 ('3-4 Days ($10)',          1000, 2),
 ('7 Days ($5)',              500, 2),
@@ -185,129 +184,129 @@ INSERT INTO shipping ("shipping_type",
 
 -- Create catalog_get_categories_list - OK
 CREATE PROCEDURE catalog_get_categories_list()
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
-    BEGIN
-SELECT   id, name
-FROM     category
-ORDER BY id;
+BEGIN
+    SELECT   id, name
+    FROM     category
+    ORDER BY id;
 END $$;
 
 
 -- Create catalog_get_category_details - OK
 CREATE PROCEDURE catalog_get_category_details(inCategoryId integer)
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
-    BEGIN
-SELECT name, description
-FROM   category
-WHERE  id = inCategoryId;
+BEGIN
+    SELECT name, description
+    FROM   category
+    WHERE  id = inCategoryId;
 END $$;
 
 -- Create catalog_count_products_in_category - OK
 CREATE PROCEDURE catalog_count_products_in_category(inCategoryId integer)
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
-    BEGIN
-SELECT     COUNT(*) AS categories_count
-FROM       product p
-               INNER JOIN product_category pc
-                          ON p.id = pc.product_id
-WHERE      pc.category_id = inCategoryId;
+BEGIN
+    SELECT     COUNT(*) AS categories_count
+    FROM       product p
+                   INNER JOIN product_category pc
+                              ON p.id = pc.product_id
+    WHERE      pc.category_id = inCategoryId;
 END $$;
 
 -- Create catalog_get_products_in_category - OK
 CREATE PROCEDURE catalog_get_products_in_category(inCategoryId integer)
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
-    BEGIN
-SELECT     p.id, p.name, description,
-           p.price, p.image, p.image_2, p.image_3
-FROM       product p
-               INNER JOIN product_category pc
-                          ON p.id = pc.product_id
-WHERE      pc.category_id = inCategoryId;
+BEGIN
+    SELECT     p.id, p.name, description,
+               p.price, p.image, p.image_2, p.image_3
+    FROM       product p
+                   INNER JOIN product_category pc
+                              ON p.id = pc.product_id
+    WHERE      pc.category_id = inCategoryId;
 END $$;
 
 
 -- Create catalog_count_products_on_catalog - OK
 CREATE PROCEDURE catalog_count_products_on_catalog()
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
-    BEGIN
-SELECT COUNT(*) AS products_on_catalog_count
-FROM   product;
+BEGIN
+    SELECT COUNT(*) AS products_on_catalog_count
+    FROM   product;
 END $$;
 
 -- Create catalog_get_products_on_catalog - OK
 CREATE PROCEDURE catalog_get_products_on_catalog()
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
-    BEGIN
-SELECT   id, name, description,
-         price, image, image_2, image_3
-FROM     product;
+BEGIN
+    SELECT   id, name, description,
+             price, image, image_2, image_3
+    FROM     product;
 END $$;
 
 
 -- Create catalog_get_product_details  - OK
 CREATE PROCEDURE catalog_get_product_details(inProductId integer)
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
-    BEGIN
-SELECT id, name, description,
-       price, image, image_2, image_3
-FROM   product
-WHERE  id = inProductId;
+BEGIN
+    SELECT id, name, description,
+           price, image, image_2, image_3
+    FROM   product
+    WHERE  id = inProductId;
 END $$;
 
 -- Create catalog_get_product_locations - OK
 CREATE PROCEDURE catalog_get_product_locations(inProductId integer)
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
-    BEGIN
-SELECT c.id, c.name AS category_name
-FROM   category c
-WHERE  c.id IN
-       (SELECT category_id
-        FROM   product_category
-        WHERE  product_id = inProductId);
+BEGIN
+    SELECT c.id, c.name AS category_name
+    FROM   category c
+    WHERE  c.id IN
+           (SELECT category_id
+            FROM   product_category
+            WHERE  product_id = inProductId);
 END $$;
 
 
 -- Create catalog_get_product_attributes  - OK
 CREATE PROCEDURE catalog_get_product_attributes(inProductId integer)
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
-    BEGIN
-SELECT     a.name AS attribute_name,
-           av.id, av.value AS attribute_value
-FROM       attribute_value av
-               INNER JOIN attribute a
-                          ON av.attribute_id = a.id
-WHERE      av.id IN
-           (SELECT attribute_id
-            FROM   product_attribute
-            WHERE  product_id = inProductId)
-ORDER BY   a.name;
+BEGIN
+    SELECT     a.name AS attribute_name,
+               av.id, av.value AS attribute_value
+    FROM       attribute_value av
+                   INNER JOIN attribute a
+                              ON av.attribute_id = a.id
+    WHERE      av.id IN
+               (SELECT attribute_id
+                FROM   product_attribute
+                WHERE  product_id = inProductId)
+    ORDER BY   a.name;
 END $$;
 
 
 -- Create catalog_get_category_name  - OK
 CREATE PROCEDURE catalog_get_category_name(inCategoryId integer)
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
-    BEGIN
-SELECT name FROM category WHERE id = inCategoryId;
+BEGIN
+    SELECT name FROM category WHERE id = inCategoryId;
 END $$;
 
 
 -- Create catalog_get_product_name - OK
 CREATE PROCEDURE catalog_get_product_name(inProductId integer)
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
-    BEGIN
-SELECT name FROM product WHERE id = inProductId;
+BEGIN
+    SELECT name FROM product WHERE id = inProductId;
 END $$;
 
 -- Create catalog_count_search_result - OK   - NO PROCEDURE( maybe elastic search)
@@ -318,21 +317,21 @@ WHERE    description ILIKE '%flow%';
 
 -- Create catalog_add_category  - OK
 CREATE PROCEDURE catalog_add_category(inName VARCHAR(100), inDescription VARCHAR(1000))
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
-    BEGIN
-INSERT INTO category (name, description)
-VALUES (inName, inDescription);
+BEGIN
+    INSERT INTO category (name, description)
+    VALUES (inName, inDescription);
 END $$;
 
 -- Create catalog_update_category - OK
 CREATE PROCEDURE catalog_update_category(inCategoryId integer, inName VARCHAR(100), inDescription VARCHAR(1000))
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
-    BEGIN
-UPDATE category
-SET    name = inName, description = inDescription
-WHERE  id = inCategoryId;
+BEGIN
+    UPDATE category
+    SET    name = inName, description = inDescription
+    WHERE  id = inCategoryId;
 END $$;
 
 
@@ -341,7 +340,7 @@ CREATE PROCEDURE catalog_delete_category(inCategoryId integer)
     LANGUAGE plpgsql
 AS $$
 BEGIN
-DELETE FROM category WHERE id = inCategoryId;
+    DELETE FROM category WHERE id = inCategoryId;
 END $$;
 
 -- Create catalog_get_attributes - Ok
@@ -392,7 +391,7 @@ DELETE FROM attribute_value WHERE id = ?;
 SELECT     p.id, p.name, p.description, p.price,
            p.image, p.image_2, p.image_3
 FROM       product p
-        INNER JOIN product_category pc
+               INNER JOIN product_category pc
                           ON p.id = pc.product_id
 WHERE      pc.category_id = ?
 ORDER BY   p.id;
@@ -400,16 +399,16 @@ ORDER BY   p.id;
 
 -- Create catalog_add_product_to_category storage procedure - This works fine!!!
 create procedure catalog_add_product_to_category(inName character varying, inDescription character varying,
-                                                inPrice integer, inImage character varying, inImage2 character varying,
-                                                inImage3 character varying, inCategoryId integer)
+                                                 inPrice integer, inImage character varying, inImage2 character varying,
+                                                 inImage3 character varying, inCategoryId integer)
     language plpgsql
 As $$
-    DECLARE last_product_id integer;
-    BEGIN
-        INSERT INTO product (name, description, price, image, image_2, image_3)
-        VALUES (inName, inDescription, inPrice, inImage, inImage2, inImage3) RETURNING id INTO last_product_id;
-        INSERT INTO product_category (product_id, category_id)
-        VALUES (last_product_id, inCategoryId);
+DECLARE last_product_id integer;
+BEGIN
+    INSERT INTO product (name, description, price, image, image_2, image_3)
+    VALUES (inName, inDescription, inPrice, inImage, inImage2, inImage3) RETURNING id INTO last_product_id;
+    INSERT INTO product_category (product_id, category_id)
+    VALUES (last_product_id, inCategoryId);
 END
 $$;
 
@@ -433,60 +432,60 @@ CREATE PROCEDURE catalog_remove_product_from_category(inProductId integer, inCat
     language plpgsql
 AS
 $$
-    DECLARE productCategoryRowsCount integer;
+DECLARE productCategoryRowsCount integer;
 BEGIN
-SELECT count(*)
-FROM   product_category
-WHERE  product_id = inProductId
+    SELECT count(*)
+    FROM   product_category
+    WHERE  product_id = inProductId
     INTO   productCategoryRowsCount;
 
-IF productCategoryRowsCount = 1 THEN
-    CALL catalog_delete_product(inProductId);
-SELECT 0;
-ELSE
-DELETE FROM product_category
-WHERE  category_id = inCategoryId AND product_id = inProductId;
-SELECT 1;
-END IF;
+    IF productCategoryRowsCount = 1 THEN
+        CALL catalog_delete_product(inProductId);
+        SELECT 0;
+    ELSE
+        DELETE FROM product_category
+        WHERE  category_id = inCategoryId AND product_id = inProductId;
+        SELECT 1;
+    END IF;
 END$$;
 
 
 
 -- Create catalog_delete_product stored procedure - OK
 CREATE PROCEDURE catalog_delete_product(inProductId integer)
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS
-    $$
+$$
 BEGIN
-DELETE FROM product_attribute WHERE product_id = inProductId;
-DELETE FROM product_category WHERE product_id = inProductId;
-DELETE FROM shopping_cart WHERE product_id = inProductId;
-DELETE FROM product WHERE id = inProductId;
+    DELETE FROM product_attribute WHERE product_id = inProductId;
+    DELETE FROM product_category WHERE product_id = inProductId;
+    DELETE FROM shopping_cart WHERE product_id = inProductId;
+    DELETE FROM product WHERE id = inProductId;
 END$$;
 
 
 
 -- Create catalog_get_categories stored procedure - OK
 CREATE PROCEDURE catalog_get_categories()
-LANGUAGE  plpgsql
+    LANGUAGE  plpgsql
 AS
-    $$
+$$
 BEGIN
-SELECT   id, name, description
-FROM     category
-ORDER BY id;
+    SELECT   id, name, description
+    FROM     category
+    ORDER BY id;
 END$$;
 
 -- Create catalog_get_product_info stored procedure - OK
 CREATE PROCEDURE catalog_get_product_info(inProductId integer)
     LANGUAGE  plpgsql
 AS
-    $$
+$$
 BEGIN
-SELECT id, name, description, price,
-       image, image_2, image_3
-FROM   product
-WHERE  id = inProductId;
+    SELECT id, name, description, price,
+           image, image_2, image_3
+    FROM   product
+    WHERE  id = inProductId;
 END$$;
 
 -- Create catalog_get_categories_for_product stored procedure - OK
@@ -494,254 +493,254 @@ CREATE PROCEDURE catalog_get_categories_for_product(inProductId integer)
     LANGUAGE  plpgsql
 AS $$
 BEGIN
-SELECT   c.id,  c.name
-FROM     category c
-             JOIN     product_category pc
-                      ON c.id = pc.category_id
-WHERE    pc.product_id = inProductId
-ORDER BY category_id;
+    SELECT   c.id,  c.name
+    FROM     category c
+                 JOIN     product_category pc
+                          ON c.id = pc.category_id
+    WHERE    pc.product_id = inProductId
+    ORDER BY category_id;
 END$$;
 
 
 -- Create catalog_assign_product_to_category stored procedure - OK
 CREATE PROCEDURE catalog_assign_product_to_category(inProductId integer,inCategoryId integer)
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
 BEGIN
-INSERT INTO product_category (product_id, category_id)
-VALUES (inProductId, inCategoryId);
+    INSERT INTO product_category (product_id, category_id)
+    VALUES (inProductId, inCategoryId);
 END$$;
 
 -- Create catalog_move_product_to_category stored procedure - OK
 CREATE PROCEDURE catalog_move_product_to_category(inProductId integer,inSourceCategoryId integer,inTargetCategoryId integer)
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
 BEGIN
-UPDATE product_category
-SET    category_id = inTargetCategoryId
-WHERE  product_id = inProductId
-  AND category_id = inSourceCategoryId;
+    UPDATE product_category
+    SET    category_id = inTargetCategoryId
+    WHERE  product_id = inProductId
+      AND category_id = inSourceCategoryId;
 END$$;
 
 -- Create catalog_get_attributes_not_assigned_to_product stored procedure - OK
 CREATE PROCEDURE catalog_get_attributes_not_assigned_to_product(inProductId integer)
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
 BEGIN
-SELECT     a.name AS attribute_name,
-           av.id, av.value AS attribute_value
-FROM       attribute_value av
-               INNER JOIN attribute a
-                          ON av.attribute_id = a.id
-WHERE      av.id NOT IN
-           (SELECT attribute_id
-            FROM   product_attribute
-            WHERE  product_id = inProductId)
-ORDER BY   attribute_name, av.id;
+    SELECT     a.name AS attribute_name,
+               av.id, av.value AS attribute_value
+    FROM       attribute_value av
+                   INNER JOIN attribute a
+                              ON av.attribute_id = a.id
+    WHERE      av.id NOT IN
+               (SELECT attribute_id
+                FROM   product_attribute
+                WHERE  product_id = inProductId)
+    ORDER BY   attribute_name, av.id;
 END$$;
 
 -- Create catalog_assign_attribute_value_to_product stored procedure - OK
 CREATE PROCEDURE catalog_assign_attribute_value_to_product(inProductId integer,inAttributeId integer)
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
 BEGIN
-INSERT INTO product_attribute (product_id, attribute_id)
-VALUES (inProductId, inAttributeId);
+    INSERT INTO product_attribute (product_id, attribute_id)
+    VALUES (inProductId, inAttributeId);
 END$$;
 
 -- Create catalog_remove_product_attribute_value stored procedure - OK
 CREATE PROCEDURE catalog_remove_product_attribute_value(inProductId integer,inAttributeId integer)
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
 BEGIN
-DELETE FROM product_attribute
-WHERE       product_id = inProductId AND
-        attribute_id = inAttributeId;
+    DELETE FROM product_attribute
+    WHERE       product_id = inProductId AND
+            attribute_id = inAttributeId;
 END$$;
 
 -- Create catalog_set_image stored procedure - OK
 CREATE PROCEDURE catalog_set_image(inProductId integer,inImage VARCHAR(100))
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
 BEGIN
-UPDATE product SET image = inImage WHERE id = inProductId;
+    UPDATE product SET image = inImage WHERE id = inProductId;
 END$$;
 
 -- Create catalog_set_image_2 stored procedure - OK
 CREATE PROCEDURE catalog_set_image_2(inProductId integer,inImage VARCHAR(100))
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
 BEGIN
-UPDATE product SET image_2 = inImage WHERE id = inProductId;
+    UPDATE product SET image_2 = inImage WHERE id = inProductId;
 END$$;
 
 -- Create catalog_set_image_3 stored procedure - OK
 CREATE PROCEDURE catalog_set_image_3(inProductId integer, IN inImage VARCHAR(100))
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
 BEGIN
-UPDATE product
-SET    image_3 = inImage
-WHERE  id = inProductId;
+    UPDATE product
+    SET    image_3 = inImage
+    WHERE  id = inProductId;
 END$$;
 
 -- Create shopping_cart_add_product stored procedure - OK
 CREATE PROCEDURE shopping_cart_add_product(inCartId uuid, inProductId integer,inAttributes VARCHAR(1000))
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
 
 DECLARE productQuantity integer;
 BEGIN
-  -- Obtain current shopping cart quantity for the product
-SELECT quantity
-FROM   shopping_cart
-WHERE  cart_id = inCartId
-  AND product_id = inProductId
-  AND attributes = inAttributes
+    -- Obtain current shopping cart quantity for the product
+    SELECT quantity
+    FROM   shopping_cart
+    WHERE  cart_id = inCartId
+      AND product_id = inProductId
+      AND attributes = inAttributes
     INTO   productQuantity;
 
 -- Create new shopping cart record, or increase quantity of existing record
-IF productQuantity IS NULL THEN
-    INSERT INTO shopping_cart(cart_id, product_id, attributes,
-                              quantity, added_on)
-           VALUES (inCartId, inProductId, inAttributes, 1, NOW());
-ELSE
-UPDATE shopping_cart
-SET    quantity = quantity + 1
-WHERE  cart_id = inCartId
-  AND product_id = inProductId
-  AND attributes = inAttributes;
-END IF;
+    IF productQuantity IS NULL THEN
+        INSERT INTO shopping_cart(cart_id, product_id, attributes,
+                                  quantity, added_on)
+        VALUES (inCartId, inProductId, inAttributes, 1, NOW());
+    ELSE
+        UPDATE shopping_cart
+        SET    quantity = quantity + 1
+        WHERE  cart_id = inCartId
+          AND product_id = inProductId
+          AND attributes = inAttributes;
+    END IF;
 END$$;
 
 -- Create shopping_cart_update_product stored procedure - OK
 CREATE PROCEDURE shopping_cart_update(inItemId integer,inQuantity integer)
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
 BEGIN
-  IF inQuantity > 0 THEN
-UPDATE shopping_cart
-SET    quantity = inQuantity, added_on = NOW()
-WHERE  id = inItemId;
-ELSE
-    CALL shopping_cart_remove_product(inItemId);
-END IF;
+    IF inQuantity > 0 THEN
+        UPDATE shopping_cart
+        SET    quantity = inQuantity, added_on = NOW()
+        WHERE  id = inItemId;
+    ELSE
+        CALL shopping_cart_remove_product(inItemId);
+    END IF;
 END$$;
 
 -- Create shopping_cart_remove_product stored procedure - OK
 CREATE PROCEDURE shopping_cart_remove_product(inItemId integer)
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
 BEGIN
-DELETE FROM shopping_cart WHERE id = inItemId;
+    DELETE FROM shopping_cart WHERE id = inItemId;
 END$$;
 
 -- Create shopping_cart_get_products stored procedure - OK
 CREATE PROCEDURE shopping_cart_get_products(inCartId uuid)
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
 BEGIN
-SELECT     sc.id, p.name, sc.attributes, p.price, sc.quantity,
-           p.price * sc.quantity AS subtotal
-FROM       shopping_cart sc
-               INNER JOIN product p
-                          ON sc.product_id = p.id
-WHERE      sc.cart_id = inCartId;
+    SELECT     sc.id, p.name, sc.attributes, p.price, sc.quantity,
+               p.price * sc.quantity AS subtotal
+    FROM       shopping_cart sc
+                   INNER JOIN product p
+                              ON sc.product_id = p.id
+    WHERE      sc.cart_id = inCartId;
 END$$;
 
 
 -- Create shopping_cart_get_total_amount stored procedure - OK
 CREATE PROCEDURE shopping_cart_get_total_amount(inCartId uuid)
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
 BEGIN
-SELECT     SUM(p.price * sc.quantity) AS total_amount
-FROM       shopping_cart sc
-               INNER JOIN product p
-                          ON sc.product_id = p.id
-WHERE      sc.cart_id = inCartId;
+    SELECT     SUM(p.price * sc.quantity) AS total_amount
+    FROM       shopping_cart sc
+                   INNER JOIN product p
+                              ON sc.product_id = p.id
+    WHERE      sc.cart_id = inCartId;
 END$$;
 
 
 -- Create shopping_cart_count_old_carts stored procedure - OK
 CREATE PROCEDURE shopping_cart_count_old_carts_greater_then_10_days()
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
 BEGIN
-SELECT COUNT(cart_id) AS old_shopping_carts_count
-FROM   (SELECT   cart_id
-        FROM     shopping_cart
-        GROUP BY cart_id
-        HAVING   (NOW() - INTERVAL '10 DAY') >= MAX(added_on))
-           AS old_carts;
+    SELECT COUNT(cart_id) AS old_shopping_carts_count
+    FROM   (SELECT   cart_id
+            FROM     shopping_cart
+            GROUP BY cart_id
+            HAVING   (NOW() - INTERVAL '10 DAY') >= MAX(added_on))
+               AS old_carts;
 END$$;
 
 -- Create shopping_cart_delete_old_carts stored procedure - OK
 CREATE PROCEDURE shopping_cart_delete_old_carts_greater_then_10_days()
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
 BEGIN
-DELETE FROM shopping_cart
-WHERE  cart_id IN
-       (SELECT cart_id
-        FROM   (SELECT   cart_id
-                FROM     shopping_cart
-                GROUP BY cart_id
-                HAVING   (NOW() - INTERVAL '10 DAY') >=
-                         MAX(added_on))
-                   AS sc);
+    DELETE FROM shopping_cart
+    WHERE  cart_id IN
+           (SELECT cart_id
+            FROM   (SELECT   cart_id
+                    FROM     shopping_cart
+                    GROUP BY cart_id
+                    HAVING   (NOW() - INTERVAL '10 DAY') >=
+                             MAX(added_on))
+                       AS sc);
 END$$;
 
 -- Create shopping_cart_empty stored procedure - OK
 CREATE PROCEDURE shopping_cart_empty(inCartId uuid)
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
 BEGIN
-DELETE FROM shopping_cart WHERE cart_id = inCartId;
+    DELETE FROM shopping_cart WHERE cart_id = inCartId;
 END$$;
 
 -- Create orders_get_order_details stored procedure OK
 CREATE PROCEDURE orders_get_order_details(inOrderId integer)
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
 BEGIN
-SELECT id, product_id, attributes, product_name,
-       quantity, unit_cost, (quantity * unit_cost) AS subtotal
-FROM   order_details
-WHERE  order_id = inOrderId;
+    SELECT id, product_id, attributes, product_name,
+           quantity, unit_cost, (quantity * unit_cost) AS subtotal
+    FROM   order_details
+    WHERE  order_id = inOrderId;
 END$$;
 
 
 -- Create customer_get_login_info stored procedure - OK
 CREATE PROCEDURE customer_get_login_info(inEmail VARCHAR(100))
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
 BEGIN
-SELECT id, password FROM customer WHERE email = inEmail;
+    SELECT id, password FROM customer WHERE email = inEmail;
 END$$;
 
 -- Create customer_add stored procedure - OK
 CREATE PROCEDURE customer_add(inFirstName VARCHAR(45), inLastName VARCHAR(45),
-                            inEmail VARCHAR(100),inPassword VARCHAR(100))
-LANGUAGE plpgsql
+                              inEmail VARCHAR(100),inPassword VARCHAR(100))
+    LANGUAGE plpgsql
 AS $$
-    DECLARE last_insert_id integer;
+DECLARE last_insert_id integer;
 BEGIN
-INSERT INTO customer (first_name, last_name, email, password)
-VALUES (inFirstName, inLastName, inEmail, inPassword)RETURNING id INTO last_insert_id;
+    INSERT INTO customer (first_name, last_name, email, password)
+    VALUES (inFirstName, inLastName, inEmail, inPassword)RETURNING id INTO last_insert_id;
 
 END$$;
 
 -- Create customer_get_customer stored procedure
 CREATE PROCEDURE customer_get_customer(inCustomerId integer)
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
 BEGIN
-SELECT id, first_name, last_name, email, password,
-       address_1, address_2, city, region, postal_code, country,
-       phone_1, phone_2
-FROM   customer
-WHERE  id = inCustomerId;
+    SELECT id, first_name, last_name, email, password,
+           address_1, address_2, city, region, postal_code, country,
+           phone_1, phone_2
+    FROM   customer
+    WHERE  id = inCustomerId;
 END$$;
 
 -- Create customer_update_account stored procedure
@@ -861,9 +860,9 @@ END$$
 CREATE PROCEDURE shopping_cart_create_order(IN inCartId CHAR(32),
                                             IN inCustomerId INT, IN inShippingId INT, IN inTaxId INT)
 BEGIN
-  DECLARE orderId INT;
+DECLARE orderId INT;
 
-  -- Insert a new record into orders and obtain the new order ID
+-- Insert a new record into orders and obtain the new order ID
 INSERT INTO orders (created_on, customer_id, shipping_id, tax_id) VALUES
 (NOW(), inCustomerId, inShippingId, inTaxId);
 -- Obtain the new Order ID
@@ -950,7 +949,7 @@ CREATE PROCEDURE orders_update_order(IN inOrderId INT, IN inStatus INT,
                                      IN inComments VARCHAR(255), IN inAuthCode VARCHAR(50),
                                      IN inReference VARCHAR(50))
 BEGIN
-  DECLARE currentDateShipped DATETIME;
+DECLARE currentDateShipped DATETIME;
 
 SELECT shipped_on
 FROM   orders
