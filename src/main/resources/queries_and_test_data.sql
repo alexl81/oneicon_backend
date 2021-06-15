@@ -344,57 +344,107 @@ BEGIN
 END $$;
 
 -- Create catalog_get_attributes - Ok
+CREATE PROCEDURE catalog_get_attributes()
+LANGUAGE plpgsql
+AS $$
+    BEGIN
 SELECT id, name FROM attribute ORDER BY id;
+END $$;
 
 
 -- Create catalog_add_attribute - OK
-INSERT INTO attribute (name) VALUES (?);
+CREATE PROCEDURE catalog_add_attribute(inName VARCHAR(100))
+LANGUAGE plpgsql
+AS $$
+    BEGIN
+INSERT INTO attribute (name) VALUES (inName);
+END $$;
 
 
 -- Create catalog_update_attribute - OK
-UPDATE attribute SET name = ? WHERE id = ?;
+CREATE PROCEDURE catalog_update_attribute(inName VARCHAR(100), inAttributeId integer)
+LANGUAGE plpgsql
+AS $$
+    BEGIN
+UPDATE attribute SET name = inName WHERE id = inAttributeId;
+END $$;
 
 
 -- Create catalog_delete_attribute - OK
-DELETE FROM attribute WHERE id = ?;
+CREATE PROCEDURE catalog_delete_attribute(inAttributeId integer)
+LANGUAGE plpgsql
+AS $$
+    BEGIN
+DELETE FROM attribute WHERE id = inAttributeId;
+END $$;
 
 
 -- Create catalog_get_attribute_details - OK
+CREATE PROCEDURE catalog_get_attribute_details(inAttributeId integer)
+LANGUAGE plpgsql
+As $$
+    BEGIN
 SELECT id, name
 FROM   attribute
-WHERE  id = ?;
+WHERE  id = inAttributeId;
+END $$;
 
 
 -- Create catalog_get_attribute_values - OK
+CREATE PROCEDURE catalog_get_attribute_values(inAttributeId integer)
+LANGUAGE plpgsql
+AS $$
+    BEGIN
 SELECT   id, value
 FROM     attribute_value
-WHERE    attribute_id = ?
+WHERE    attribute_id = inAttributeId
 ORDER BY attribute_id;
+END $$;
 
 
 -- Create catalog_add_attribute_value - OK
+CREATE PROCEDURE catalog_add_attribute_value(inAttributeId integer, inValue VARCHAR(100))
+LANGUAGE plpgsql
+AS $$
+    BEGIN
 INSERT INTO attribute_value (attribute_id, value)
-VALUES (?, ?);
+VALUES (inAttributeId, inValue);
+END $$;
 
 
 -- Create catalog_update_attribute_value - OK
+CREATE PROCEDURE catalog_update_attribute_value(inValue VARCHAR(100), inAttributeValueId integer)
+LANGUAGE plpgsql
+AS $$
+    BEGIN
 UPDATE attribute_value
-SET    value = ?
-WHERE  id = ?;
+SET    value = inValue
+WHERE  id = inAttributeValueId;
+END $$;
 
 
 -- Create catalog_delete_attribute_value - OK
-DELETE FROM attribute_value WHERE id = ?;
+CREATE PROCEDURE catalog_delete_attribute_value(inAttributeValueId integer)
+LANGUAGE plpgsql
+AS $$
+    BEGIN
+DELETE FROM attribute_value WHERE id = inAttributeValueId;
+END $$;
 
 
 -- Create catalog_get_category_products - OK
+CREATE PROCEDURE catalog_get_category_products(inCategoryId integer)
+LANGUAGE plpgsql
+AS $$
+    BEGIN
 SELECT     p.id, p.name, p.description, p.price,
            p.image, p.image_2, p.image_3
 FROM       product p
                INNER JOIN product_category pc
                           ON p.id = pc.product_id
-WHERE      pc.category_id = ?
+WHERE      pc.category_id = inCategoryId
 ORDER BY   p.id;
+END $$;
 
 
 -- Create catalog_add_product_to_category storage procedure - This works fine!!!
@@ -744,256 +794,232 @@ BEGIN
 END$$;
 
 -- Create customer_update_account stored procedure
-CREATE PROCEDURE customer_update_account(IN inCustomerId INT,
-                                         IN inName VARCHAR(50), IN inEmail VARCHAR(100),
-                                         IN inPassword VARCHAR(50), IN inDayPhone VARCHAR(100),
-                                         IN inEvePhone VARCHAR(100), IN inMobPhone VARCHAR(100))
+CREATE PROCEDURE customer_update_account(inCustomerId integer,inFirstName VARCHAR(45), inLastName VARCHAR(45),inEmail VARCHAR(100),
+                                         inPassword VARCHAR(100),inPhone1 VARCHAR(30),inPhone2 VARCHAR(30))
+    LANGUAGE plpgsql
+AS $$
 BEGIN
 UPDATE customer
-SET    name = inName, email = inEmail,
-       password = inPassword, day_phone = inDayPhone,
-       eve_phone = inEvePhone, mob_phone = inMobPhone
-WHERE  customer_id = inCustomerId;
-END$$
+SET    first_name = inFirstName, last_name = inLastName, email = inEmail,
+       password = inPassword, phone_1 = inPhone1, phone_2 = inPhone2
+WHERE  id = inCustomerId;
+END$$;
 
--- Create customer_update_credit_card stored procedure
-CREATE PROCEDURE customer_update_credit_card(
-    IN inCustomerId INT, IN inCreditCard TEXT)
-BEGIN
-UPDATE customer
-SET    credit_card = inCreditCard
-WHERE  customer_id = inCustomerId;
-END$$
 
 -- Create customer_get_shipping_regions stored procedure
 CREATE PROCEDURE customer_get_shipping_regions()
+LANGUAGE plpgsql
+AS $$
 BEGIN
-SELECT shipping_region_id, shipping_region FROM shipping_region;
-END$$
+SELECT id, shipping_regions FROM shipping_region;
+END$$;
 
 -- Create customer_update_address stored procedure
-CREATE PROCEDURE customer_update_address(IN inCustomerId INT,
-                                         IN inAddress1 VARCHAR(100), IN inAddress2 VARCHAR(100),
-                                         IN inCity VARCHAR(100), IN inRegion VARCHAR(100),
-                                         IN inPostalCode VARCHAR(100), IN inCountry VARCHAR(100),
-                                         IN inShippingRegionId INT)
+CREATE PROCEDURE customer_update_address(inCustomerId integer,inAddress1 VARCHAR(100),inAddress2 VARCHAR(100),
+                                         inCity VARCHAR(50),inRegion VARCHAR(50),inPostalCode VARCHAR(50),inCountry VARCHAR(50))
+    LANGUAGE plpgsql
+AS $$
 BEGIN
 UPDATE customer
 SET    address_1 = inAddress1, address_2 = inAddress2, city = inCity,
        region = inRegion, postal_code = inPostalCode,
-       country = inCountry, shipping_region_id = inShippingRegionId
-WHERE  customer_id = inCustomerId;
-END$$
+       country = inCountry
+WHERE  id = inCustomerId;
+END$$;
 
 -- Create orders_get_most_recent_orders stored procedure
-CREATE PROCEDURE orders_get_most_recent_orders(IN inHowMany INT)
+CREATE PROCEDURE orders_get_most_recent_orders(inHowMany integer)
+LANGUAGE plpgsql
+AS $$
 BEGIN
-PREPARE statement FROM
-    "SELECT     o.order_id, o.total_amount, o.created_on,
-                o.shipped_on, o.status, c.name
+    SELECT     o.id, o.total_amount, o.created_on,
+                o.shipped_on, o.status, c.first_name, c.last_name
      FROM       orders o
      INNER JOIN customer c
-                  ON o.customer_id = c.customer_id
+                  ON o.customer_id = c.id
      ORDER BY   o.created_on DESC
-     LIMIT      ?";
-
-SET @p1 = inHowMany;
-
-EXECUTE statement USING @p1;
-END$$
+     LIMIT      inHowMany;
+END$$;
 
 -- Create orders_get_orders_between_dates stored procedure
-CREATE PROCEDURE orders_get_orders_between_dates(
-    IN inStartDate DATETIME, IN inEndDate DATETIME)
+CREATE PROCEDURE orders_get_orders_between_dates(inStartDate TIMESTAMP WITHOUT TIME ZONE,inEndDate TIMESTAMP WITHOUT TIME ZONE)
+LANGUAGE plpgsql
+AS $$
 BEGIN
-SELECT     o.order_id, o.total_amount, o.created_on,
-           o.shipped_on, o.status, c.name
+SELECT     o.id, o.total_amount, o.created_on,
+           o.shipped_on, o.status, c.first_name, c.last_name
 FROM       orders o
                INNER JOIN customer c
-                          ON o.customer_id = c.customer_id
+                          ON o.customer_id = c.id
 WHERE      o.created_on >= inStartDate AND o.created_on <= inEndDate
 ORDER BY   o.created_on DESC;
-END$$
+END$$;
 
 -- Create orders_get_orders_by_status stored procedure
-CREATE PROCEDURE orders_get_orders_by_status(IN inStatus INT)
+CREATE PROCEDURE orders_get_orders_by_status(inStatus integer)
+LANGUAGE plpgsql
+AS $$
 BEGIN
-SELECT     o.order_id, o.total_amount, o.created_on,
-           o.shipped_on, o.status, c.name
+SELECT     o.id, o.total_amount, o.created_on,
+           o.shipped_on, o.status, c.first_name, c.last_name
 FROM       orders o
                INNER JOIN customer c
-                          ON o.customer_id = c.customer_id
+                          ON o.customer_id = c.id
 WHERE      o.status = inStatus
 ORDER BY   o.created_on DESC;
-END$$
+END$$;
 
 -- Create orders_get_by_customer_id stored procedure
-CREATE PROCEDURE orders_get_by_customer_id(IN inCustomerId INT)
+CREATE PROCEDURE orders_get_by_customer_id(inCustomerId integer)
+LANGUAGE plpgsql
+AS $$
 BEGIN
-SELECT     o.order_id, o.total_amount, o.created_on,
-           o.shipped_on, o.status, c.name
+SELECT     o.id, o.total_amount, o.created_on,
+           o.shipped_on, o.status, c.first_name, c.last_name
 FROM       orders o
                INNER JOIN customer c
-                          ON o.customer_id = c.customer_id
+                          ON o.customer_id = c.id
 WHERE      o.customer_id = inCustomerId
 ORDER BY   o.created_on DESC;
-END$$
+END$$;
 
 -- Create orders_get_order_short_details stored procedure
-CREATE PROCEDURE orders_get_order_short_details(IN inOrderId INT)
+CREATE PROCEDURE orders_get_order_short_details(inOrderId integer)
+LANGUAGE plpgsql
+AS $$
 BEGIN
-SELECT      o.order_id, o.total_amount, o.created_on,
-            o.shipped_on, o.status, c.name
+SELECT      o.id, o.total_amount, o.created_on,
+            o.shipped_on, o.status, c.first_name, c.last_name
 FROM        orders o
                 INNER JOIN  customer c
-                            ON o.customer_id = c.customer_id
-WHERE       o.order_id = inOrderId;
-END$$
+                            ON o.customer_id = c.id
+WHERE       o.id = inOrderId;
+END$$;
 
 -- Create customer_get_customers_list stored procedure
 CREATE PROCEDURE customer_get_customers_list()
+LANGUAGE plpgsql
+AS $$
 BEGIN
-SELECT customer_id, name FROM customer ORDER BY name ASC;
-END$$
+SELECT id, first_name, last_name FROM customer ORDER BY last_name ASC;
+END$$;
 
 -- Create shopping_cart_create_order stored procedure
-CREATE PROCEDURE shopping_cart_create_order(IN inCartId CHAR(32),
-                                            IN inCustomerId INT, IN inShippingId INT, IN inTaxId INT)
+CREATE PROCEDURE shopping_cart_create_order(inCartId uuid,inCustomerId integer,inShippingId integer)
+LANGUAGE plpgsql
+AS $$
+DECLARE orderId integer;
 BEGIN
-DECLARE orderId INT;
-
 -- Insert a new record into orders and obtain the new order ID
-INSERT INTO orders (created_on, customer_id, shipping_id, tax_id) VALUES
-(NOW(), inCustomerId, inShippingId, inTaxId);
--- Obtain the new Order ID
-SELECT LAST_INSERT_ID() INTO orderId;
+INSERT INTO orders (created_on, customer_id, shipping_id) VALUES
+(NOW(), inCustomerId, inShippingId) RETURNING id INTO orderId;
 
 -- Insert order details in order_detail table
-INSERT INTO order_detail (order_id, product_id, attributes,
+INSERT INTO order_details (order_id, product_id, attributes,
                           product_name, quantity, unit_cost)
-SELECT      orderId, p.product_id, sc.attributes, p.name, sc.quantity,
-            COALESCE(NULLIF(p.discounted_price, 0), p.price) AS unit_cost
+SELECT      orderId, p.id, sc.attributes, p.name, sc.quantity, p.price AS unit_cost
 FROM        shopping_cart sc
                 INNER JOIN  product p
-                            ON sc.product_id = p.product_id
-WHERE       sc.cart_id = inCartId AND sc.buy_now;
+                            ON sc.product_id = p.id
+WHERE       sc.cart_id = inCartId;
 
 -- Save the order's total amount
 UPDATE orders
 SET    total_amount = (SELECT SUM(unit_cost * quantity)
-                       FROM   order_detail
+                       FROM   order_details
                        WHERE  order_id = orderId)
-WHERE  order_id = orderId;
+WHERE  id = orderId;
 
 -- Clear the shopping cart
 CALL shopping_cart_empty(inCartId);
 
 -- Return the Order ID
 SELECT orderId;
-END$$
+END$$;
 
--- Create orders_get_order_info stored procedure
-CREATE PROCEDURE orders_get_order_info(IN inOrderId INT)
+-- Create orders_get_order_info stored procedure ... возможно в таблицу необходимо будет добавить поля auth_code и reference
+CREATE PROCEDURE orders_get_order_info(inOrderId integer)
+LANGUAGE plpgsql
+    AS $$
 BEGIN
-SELECT     o.order_id, o.total_amount, o.created_on, o.shipped_on,
-           o.status, o.comments, o.customer_id, o.auth_code,
-           o.reference, o.shipping_id, s.shipping_type, s.shipping_cost,
-           o.tax_id, t.tax_type, t.tax_percentage
+SELECT     o.id, o.total_amount, o.created_on, o.shipped_on,
+           o.status, o.comments, o.customer_id, o.shipping_id, s.shipping_type, s.shipping_cost
 FROM       orders o
-               INNER JOIN tax t
-                          ON t.tax_id = o.tax_id
                INNER JOIN shipping s
-                          ON s.shipping_id = o.shipping_id
-WHERE      o.order_id = inOrderId;
-END$$
+                          ON s.id = o.shipping_id
+WHERE      o.id = inOrderId;
+END$$;
 
 -- Create orders_get_shipping_info stored procedure
-CREATE PROCEDURE orders_get_shipping_info(IN inShippingRegionId INT)
+CREATE PROCEDURE orders_get_shipping_info(inShippingRegionId integer)
+LANGUAGE plpgsql
+AS $$
 BEGIN
-SELECT shipping_id, shipping_type, shipping_cost, shipping_region_id
+SELECT id, shipping_type, shipping_cost, shipping_region_id
 FROM   shipping
 WHERE  shipping_region_id = inShippingRegionId;
-END$$
+END$$;
 
--- Create orders_create_audit stored procedure
-CREATE PROCEDURE orders_create_audit(IN inOrderId INT,
-                                     IN inMessage TEXT, IN inCode INT)
-BEGIN
-INSERT INTO audit (order_id, created_on, message, code)
-VALUES (inOrderId, NOW(), inMessage, inCode);
-END$$
 
 -- Create orders_update_status stored procedure
-CREATE PROCEDURE orders_update_status(IN inOrderId INT, IN inStatus INT)
+CREATE PROCEDURE orders_update_status(inOrderId integer,inStatus integer)
+LANGUAGE plpgsql
+AS $$
 BEGIN
-UPDATE orders SET status = inStatus WHERE order_id = inOrderId;
-END$$
+UPDATE orders SET status = inStatus WHERE id = inOrderId;
+END$$;
 
--- Create orders_set_auth_code stored procedure
-CREATE PROCEDURE orders_set_auth_code(IN inOrderId INT,
-                                      IN inAuthCode VARCHAR(50), IN inReference VARCHAR(50))
-BEGIN
-UPDATE orders
-SET    auth_code = inAuthCode, reference = inReference
-WHERE  order_id = inOrderId;
-END$$
 
 -- Create orders_set_date_shipped stored procedure
-CREATE PROCEDURE orders_set_date_shipped(IN inOrderId INT)
+CREATE PROCEDURE orders_set_date_shipped(inOrderId integer)
+LANGUAGE plpgsql
+AS $$
 BEGIN
-UPDATE orders SET shipped_on = NOW() WHERE order_id = inOrderId;
-END$$
+UPDATE orders SET shipped_on = NOW() WHERE id = inOrderId;
+END$$;
 
 -- Create orders_update_order stored procedure
-CREATE PROCEDURE orders_update_order(IN inOrderId INT, IN inStatus INT,
-                                     IN inComments VARCHAR(255), IN inAuthCode VARCHAR(50),
-                                     IN inReference VARCHAR(50))
+CREATE PROCEDURE orders_update_order(inOrderId integer,inStatus integer,inComments TEXT)
+LANGUAGE plpgsql
+AS $$
+DECLARE currentDateShipped timestamp without time zone;
 BEGIN
-DECLARE currentDateShipped DATETIME;
-
 SELECT shipped_on
 FROM   orders
-WHERE  order_id = inOrderId
+WHERE  id = inOrderId
     INTO   currentDateShipped;
 
 UPDATE orders
-SET    status = inStatus, comments = inComments,
-       auth_code = inAuthCode, reference = inReference
-WHERE  order_id = inOrderId;
+SET    status = inStatus, comments = inComments
+WHERE  id = inOrderId;
 
 IF inStatus < 7 AND currentDateShipped IS NOT NULL THEN
-UPDATE orders SET shipped_on = NULL WHERE order_id = inOrderId;
+UPDATE orders SET shipped_on = NULL WHERE id = inOrderId;
 ELSEIF inStatus > 6 AND currentDateShipped IS NULL THEN
-UPDATE orders SET shipped_on = NOW() WHERE order_id = inOrderId;
+UPDATE orders SET shipped_on = NOW() WHERE id = inOrderId;
 END IF;
-END$$
+END$$;
 
--- Create orders_get_audit_trail stored procedure
-CREATE PROCEDURE orders_get_audit_trail(IN inOrderId INT)
-BEGIN
-SELECT audit_id, order_id, created_on, message, code
-FROM   audit
-WHERE  order_id = inOrderId;
-END$$
 
 -- Create catalog_get_product_reviews stored procedure
-CREATE PROCEDURE catalog_get_product_reviews(IN inProductId INT)
+CREATE PROCEDURE catalog_get_product_reviews(inProductId integer)
+LANGUAGE plpgsql
+AS $$
 BEGIN
-SELECT     c.name, r.review, r.rating, r.created_on
+SELECT     c.first_name, c.last_name, r.review, r.rating, r.created_on
 FROM       review r
                INNER JOIN customer c
-                          ON c.customer_id = r.customer_id
+                          ON c.id = r.customer_id
 WHERE      r.product_id = inProductId
 ORDER BY   r.created_on DESC;
-END$$
+END$$;
 
 -- Create catalog_create_product_review stored procedure
-CREATE PROCEDURE catalog_create_product_review(IN inCustomerId INT,
-                                               IN inProductId INT, IN inReview TEXT, IN inRating SMALLINT)
+CREATE PROCEDURE catalog_create_product_review(inCustomerId integer,inProductId integer,inReview TEXT,inRating SMALLINT)
+LANGUAGE plpgsql
+AS $$
 BEGIN
 INSERT INTO review (customer_id, product_id, review, rating, created_on)
 VALUES (inCustomerId, inProductId, inReview, inRating, NOW());
-END$$
+END$$;
 
--- Change back DELIMITER to ;
-DELIMITER ;
