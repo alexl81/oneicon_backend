@@ -1,5 +1,8 @@
 package ru.oneicon.oneicon_backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -29,6 +32,7 @@ public class Category implements Serializable {
     @Column(name = "description", nullable = false, columnDefinition = "VARCHAR(1000)")
     private String description;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "category")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE},fetch = FetchType.LAZY, mappedBy = "category")
+    @JsonBackReference
     private List<ProductCategory> productCategory = new ArrayList<>();
 }
