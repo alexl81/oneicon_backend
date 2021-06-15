@@ -2,9 +2,11 @@ package ru.oneicon.oneicon_backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.oneicon.oneicon_backend.entity.Category;
+import ru.oneicon.oneicon_backend.exception.NotFoundException;
 import ru.oneicon.oneicon_backend.service.CategoryService;
 
 import java.util.List;
@@ -24,5 +26,10 @@ public class CategoryController {
     @GetMapping
     public List<Category> retrieveAllCategories() {
         return categoryService.getAllCategories();
+    }
+
+    @GetMapping(path="/{id}")
+    public Category getCategoryById(@PathVariable("id") Long id) {
+        return categoryService.getCategoryById(id).orElseThrow(() -> new NotFoundException("category"));
     }
 }
