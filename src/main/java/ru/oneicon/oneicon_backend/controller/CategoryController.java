@@ -1,10 +1,7 @@
 package ru.oneicon.oneicon_backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.oneicon.oneicon_backend.entity.Category;
 import ru.oneicon.oneicon_backend.exception.NotFoundException;
 import ru.oneicon.oneicon_backend.service.CategoryService;
@@ -12,7 +9,7 @@ import ru.oneicon.oneicon_backend.service.CategoryService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/categories")
+@RequestMapping("/api/v1/category")
 public class CategoryController {
 
 
@@ -23,13 +20,28 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping
-    public List<Category> retrieveAllCategories() {
+    @GetMapping(path="/all")
+    public List<Category> getAllCategories() {
         return categoryService.getAllCategories();
     }
 
     @GetMapping(path="/{id}")
     public Category getCategoryById(@PathVariable("id") Long id) {
-        return categoryService.getCategoryById(id).orElseThrow(() -> new NotFoundException("category"));
+        return categoryService.getCategoryById(id);
+    }
+
+    @PostMapping
+    public void createCategory(@RequestBody Category category) {
+        categoryService.addCategory(category);
+    }
+
+    @PutMapping(path="/{id}")
+    public Category editCategory(@PathVariable("id") Long id, @RequestBody Category category) {
+        return categoryService.updateCategory(id, category);
+    }
+
+    @DeleteMapping(path="/{id}")
+    public void removeCategory(@PathVariable("id") Long id) {
+        categoryService.deleteCategory(id);
     }
 }
