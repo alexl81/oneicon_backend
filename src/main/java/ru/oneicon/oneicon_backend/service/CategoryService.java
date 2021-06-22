@@ -44,11 +44,8 @@ public class CategoryService {
         categoryRepository.save(category);
     }
 
-    public Category updateCategory(Long id, Category category) {
+    public Category updateCategory(Category category) {
         log.info("updateCategory was called");
-        if(!categoryRepository.existsById(id)) {
-            throw new NotFoundException("Category with id " + id + " does not exists");
-        }
         return categoryRepository.save(category);
     }
 

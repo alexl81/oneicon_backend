@@ -1,6 +1,7 @@
 package ru.oneicon.oneicon_backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
@@ -33,6 +34,6 @@ public class Category implements Serializable {
     private String description;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE},fetch = FetchType.LAZY, mappedBy = "category")
-    @JsonBackReference
+    @JsonIgnore
     private List<ProductCategory> productCategory = new ArrayList<>();
 }
