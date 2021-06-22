@@ -1,6 +1,7 @@
 package ru.oneicon.oneicon_backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
@@ -44,16 +45,19 @@ public class Product implements Serializable {
     private String image3;
 
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "product")
-    @JsonManagedReference
+    @JsonBackReference
     private List<ProductCategory> productCategoryList = new ArrayList<>();
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, mappedBy = "product")
+    @JsonIgnore
     private List<ProductAttribute> productAttributeList = new ArrayList<>();
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, mappedBy = "product")
+    @JsonIgnore
     private List<OrderDetails> orderDetailsList = new ArrayList<>();
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, mappedBy = "product")
+    @JsonIgnore
     private List<Review> reviews = new ArrayList<>();
 
 }
