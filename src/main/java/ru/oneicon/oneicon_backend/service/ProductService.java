@@ -1,18 +1,15 @@
 package ru.oneicon.oneicon_backend.service;
 
-import com.sun.istack.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.oneicon.oneicon_backend.entity.Category;
 import ru.oneicon.oneicon_backend.entity.Product;
 import ru.oneicon.oneicon_backend.exception.BadRequestException;
 import ru.oneicon.oneicon_backend.exception.NotFoundException;
 import ru.oneicon.oneicon_backend.repository.CategoryRepository;
 import ru.oneicon.oneicon_backend.repository.ProductRepository;
-
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 @Slf4j

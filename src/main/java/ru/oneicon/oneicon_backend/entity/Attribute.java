@@ -1,6 +1,7 @@
 package ru.oneicon.oneicon_backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
@@ -34,9 +35,10 @@ public class Attribute implements Serializable {
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             fetch = FetchType.LAZY
     )
+    @JsonIgnore
     private List<AttributeValue> attributeValueList = new ArrayList<>();
 
-    @JsonManagedReference
+    @JsonBackReference
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "attribute")
     private List<ProductAttribute> productAttributeList = new ArrayList<>();
 }

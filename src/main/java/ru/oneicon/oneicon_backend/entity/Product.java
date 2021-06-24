@@ -49,7 +49,7 @@ public class Product implements Serializable {
     private List<ProductCategory> productCategoryList = new ArrayList<>();
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, mappedBy = "product")
-    @JsonIgnore
+    @JsonManagedReference
     private List<ProductAttribute> productAttributeList = new ArrayList<>();
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, mappedBy = "product")

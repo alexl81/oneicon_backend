@@ -1,5 +1,6 @@
 package ru.oneicon.oneicon_backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -17,17 +18,17 @@ import java.io.Serializable;
 public class ProductAttribute implements Serializable {
 
     @EmbeddedId
+    @JsonIgnore
     private ProductAttributeId id;
 
     @ManyToOne
     @MapsId("productId")
     @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "product_attribute_product_id_fk"))
-    @JsonProperty(value = "product_id")
+    @JsonIgnore
     private Product product;
 
     @ManyToOne
     @MapsId("attributeId")
     @JoinColumn(name = "attribute_id", foreignKey = @ForeignKey(name = "product_attribute_attribute_id_fk"))
-    @JsonProperty(value = "attribute_id")
     private Attribute attribute;
 }

@@ -1,5 +1,6 @@
 package ru.oneicon.oneicon_backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -30,5 +31,6 @@ public class AttributeValue implements Serializable {
             nullable = false,
             referencedColumnName = "id",
             foreignKey = @ForeignKey(name = "attribute_attribute_value_fk"))
+    @JsonIgnore
     private Attribute attribute;
 }
