@@ -28,7 +28,7 @@ public class ProductAttribute implements Serializable {
     private Product product;
 
     @ManyToOne
-    @MapsId("attributeId")
+    @MapsId("attributeValueId")
     @JoinColumn(name = "attribute_id", foreignKey = @ForeignKey(name = "product_attribute_attribute_id_fk"))
     private Attribute attribute;
 }

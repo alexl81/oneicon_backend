@@ -29,16 +29,27 @@ public class Attribute implements Serializable {
     @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(100)")
     private String name;
 
-    @OneToMany(
-            mappedBy = "attribute",
-            orphanRemoval = true,
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
-            fetch = FetchType.LAZY
-    )
-    @JsonIgnore
-    private List<AttributeValue> attributeValueList = new ArrayList<>();
-
     @JsonBackReference
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "attribute")
     private List<ProductAttribute> productAttributeList = new ArrayList<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "attribute", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    private List<AttributeValue> attributeValueList = new ArrayList<>();
+
+
+
+    public void addAttributeValue(AttributeValue attributeValue) {
+        if (!this.attributeValueList.contains(attributeValue)) {
+            this.attributeValueList.add(attributeValue);
+            attributeValue.setAttribute(this);
+        }
+    }
+
+    public void removeAttributeValue(AttributeValue attributeValue) {
+        if (this.attributeValueList.contains(attributeValue)) {
+            this.attributeValueList.remove(attributeValue);
+            attributeValue.setAttribute(null);
+        }
+    }
 }

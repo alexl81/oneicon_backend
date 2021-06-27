@@ -36,4 +36,5 @@ public class Category implements Serializable {
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE},fetch = FetchType.LAZY, mappedBy = "category")
     @JsonIgnore
     private List<ProductCategory> productCategory = new ArrayList<>();
+
 }

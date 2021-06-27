@@ -3,6 +3,7 @@ package ru.oneicon.oneicon_backend.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.oneicon.oneicon_backend.entity.Attribute;
 import ru.oneicon.oneicon_backend.entity.AttributeValue;
 import ru.oneicon.oneicon_backend.exception.BadRequestException;
 import ru.oneicon.oneicon_backend.exception.NotFoundException;
@@ -41,7 +42,7 @@ public class AttributeValueService {
         log.info("addAttributeValue was called");
         if(attributeValue.getValue() == null)
             throw new BadRequestException("AttributeValue name must not be empty");
-        attributeValueRepository.save(attributeValue);
+            attributeValueRepository.save(attributeValue);
     }
 
     public AttributeValue updateAttributeValue(AttributeValue attributeValue) {

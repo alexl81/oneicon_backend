@@ -1,7 +1,6 @@
 package ru.oneicon.oneicon_backend.entity;
 
 import lombok.*;
-import org.springframework.context.annotation.EnableMBeanExport;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;

@@ -3,9 +3,9 @@ package ru.oneicon.oneicon_backend.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.oneicon.oneicon_backend.entity.*;
+import ru.oneicon.oneicon_backend.service.CategoryService;
 import ru.oneicon.oneicon_backend.service.ProductService;
 
-import java.security.KeyStore;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,13 +46,14 @@ public class ProductController {
         productService.deleteProduct(id);
     }
 
-    @GetMapping(path = "{id}/attributes")
+    @GetMapping(path = "/{id}/attributes")
     public List<Attribute> getAttributesByProductId(@PathVariable("id") Long productId) {
         Product product = productService.getProductById(productId);
         return product.getProductAttributeList().stream()
                 .map(ProductAttribute::getAttribute)
                 .collect(Collectors.toList());
     }
+
 
 }
 

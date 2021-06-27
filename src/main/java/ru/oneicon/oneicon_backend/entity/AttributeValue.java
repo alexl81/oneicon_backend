@@ -1,6 +1,7 @@
 package ru.oneicon.oneicon_backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
+import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
@@ -28,9 +29,9 @@ public class AttributeValue implements Serializable {
     @ManyToOne
     @JoinColumn(
             name = "attribute_id",
-            nullable = false,
             referencedColumnName = "id",
+            nullable = false,
             foreignKey = @ForeignKey(name = "attribute_attribute_value_fk"))
-    @JsonIgnore
+    @JsonBackReference
     private Attribute attribute;
 }

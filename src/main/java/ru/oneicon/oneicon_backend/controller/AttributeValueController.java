@@ -2,21 +2,25 @@ package ru.oneicon.oneicon_backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.oneicon.oneicon_backend.entity.Attribute;
 import ru.oneicon.oneicon_backend.entity.AttributeValue;
+import ru.oneicon.oneicon_backend.service.AttributeService;
 import ru.oneicon.oneicon_backend.service.AttributeValueService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/attributeValue")
+@RequestMapping("/api/v1/value")
 public class AttributeValueController {
 
     private final AttributeValueService attributeValueService;
+    private final AttributeService attributeService;
 
 
     @Autowired
-    public AttributeValueController(AttributeValueService attributeValueService) {
+    public AttributeValueController(AttributeValueService attributeValueService, AttributeService attributeService) {
         this.attributeValueService = attributeValueService;
+        this.attributeService = attributeService;
     }
 
     @GetMapping(path = "/all")
@@ -29,20 +33,9 @@ public class AttributeValueController {
         return attributeValueService.getAttributeValueById(id);
     }
 
-    @PostMapping
-    public void createAttributeValue(@RequestBody AttributeValue attributeValue) {
-        attributeValueService.addAttributeValue(attributeValue);
-    }
-
     @PutMapping(path="/{id}")
     public AttributeValue editAttributeValue(@RequestBody AttributeValue attributeValue) {
         return attributeValueService.updateAttributeValue(attributeValue);
     }
-
-    @DeleteMapping(path="/{id}")
-    public void removeAttributeValue(@PathVariable("id") Long id) {
-        attributeValueService.deleteAttributeValue(id);
-    }
-
 
 }
