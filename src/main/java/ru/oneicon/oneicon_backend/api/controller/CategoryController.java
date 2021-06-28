@@ -1,4 +1,4 @@
-package ru.oneicon.oneicon_backend.controller;
+package ru.oneicon.oneicon_backend.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,26 +26,31 @@ public class CategoryController {
 
     @GetMapping(path="/all")
     public List<Category> getAllCategories() {
+        // Getting all categories in application
         return categoryService.getAllCategories();
     }
 
     @GetMapping(path="/{id}")
     public Category getCategoryById(@PathVariable("id") Long id) {
+        // Getting the requiring category, or throwing exception if not found
         return categoryService.getCategoryById(id);
     }
 
     @PostMapping
     public void createCategory(@RequestBody Category category) {
+        // Creating a new category in the application
         categoryService.addCategory(category);
     }
 
     @PutMapping(path="/{id}")
     public Category editCategory(@RequestBody Category category) {
+        // Updating a category in the application
         return categoryService.updateCategory(category);
     }
 
     @DeleteMapping(path="/{id}")
     public void removeCategory(@PathVariable("id") Long id) {
+        // Deleting a category from the application
         categoryService.deleteCategory(id);
     }
 

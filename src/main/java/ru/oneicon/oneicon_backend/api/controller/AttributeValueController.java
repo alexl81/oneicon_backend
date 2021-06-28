@@ -1,4 +1,4 @@
-package ru.oneicon.oneicon_backend.controller;
+package ru.oneicon.oneicon_backend.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

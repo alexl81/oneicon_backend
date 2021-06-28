@@ -1,6 +1,8 @@
-package ru.oneicon.oneicon_backend.controller;
+package ru.oneicon.oneicon_backend.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import ru.oneicon.oneicon_backend.entity.*;
 import ru.oneicon.oneicon_backend.service.CategoryService;
@@ -22,8 +24,8 @@ public class ProductController {
     }
 
     @GetMapping(path = "/all")
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public Page<Product> getAllProducts(Pageable pageable) {
+        return productService.getAllProducts(pageable);
     }
 
     @GetMapping(path="/{id}")
@@ -31,15 +33,15 @@ public class ProductController {
         return productService.getProductById(id);
     }
 
-    @PostMapping
-    public void createProduct(@RequestBody Product product) {
-        productService.addProduct(product);
-    }
+//    @PostMapping
+//    public void createProduct(@RequestBody Product product) {
+//        productService.createProduct(product);
+//    }
 
-    @PutMapping(path="/{id}")
-    public Product editProduct(@RequestBody Product product) {
-        return productService.updateProduct(product);
-    }
+//    @PutMapping(path="/{id}")
+//    public Product editProduct(@RequestBody Product product) {
+//        return productService.updateProduct(product);
+//    }
 
     @DeleteMapping(path="/{id}")
     public void removeProduct(@PathVariable("id") Long id) {
