@@ -3,7 +3,9 @@ package ru.oneicon.oneicon_backend.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.oneicon.oneicon_backend.entity.Category;
 import ru.oneicon.oneicon_backend.entity.Product;
+import ru.oneicon.oneicon_backend.entity.ProductCategory;
 import ru.oneicon.oneicon_backend.exception.BadRequestException;
 import ru.oneicon.oneicon_backend.exception.NotFoundException;
 import ru.oneicon.oneicon_backend.repository.CategoryRepository;
@@ -62,4 +64,5 @@ public class ProductService {
         }
         productRepository.deleteById(id);
     }
+
 }
