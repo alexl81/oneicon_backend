@@ -34,7 +34,7 @@ public class Attribute implements Serializable {
     private List<ProductAttribute> productAttributeList = new ArrayList<>();
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "attribute", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "attribute", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<AttributeValue> attributeValueList = new ArrayList<>();
 
 

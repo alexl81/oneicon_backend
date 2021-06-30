@@ -3,6 +3,7 @@ package ru.oneicon.oneicon_backend.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,7 +30,7 @@ public class ShoppingCart {
     private UUID cartId;
 
     @Column(name = "product_id", nullable = false, columnDefinition = "INTEGER")
-    private Integer product_id;
+    private Long product_id;
 
     @Column(name = "attributes", nullable = false, columnDefinition = "VARCHAR(1000)")
     private String attributes;
@@ -38,5 +39,5 @@ public class ShoppingCart {
     private Integer quantity;
 
     @Column(name = "added_on", nullable = false, columnDefinition = "TIMESTAMP WITHOUT TIME ZONE" )
-    private Date added_on;
+    private LocalDateTime added_on;
 }

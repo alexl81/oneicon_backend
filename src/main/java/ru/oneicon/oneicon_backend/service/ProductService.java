@@ -2,6 +2,8 @@ package ru.oneicon.oneicon_backend.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.oneicon.oneicon_backend.entity.Category;
 import ru.oneicon.oneicon_backend.entity.Product;
@@ -24,9 +26,14 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> getAllProducts() {
+    public Page<Product> getAllProducts(Pageable page) {
         log.info("getAllProducts was called");
-        return productRepository.findAll();
+        return productRepository.findAll(page);
+    }
+
+    public Long countAllProducts() {
+        log.info("countAllProducts was called");
+        return productRepository.count();
     }
 
     public Product getProductById(Long id) {

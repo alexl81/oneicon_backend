@@ -56,4 +56,11 @@ public class CategoryController {
                 .map(ProductCategory::getProduct)
                 .collect(Collectors.toList());
     }
+
+    @GetMapping(path="{id}/products/count")
+    public Long countProductsByCategoryId(@PathVariable("id") Long categoryId) {
+        Category category = categoryService.getCategoryById(categoryId);
+        return category.getProductCategory().stream()
+                .map(ProductCategory::getProduct).count();
+    }
 }
